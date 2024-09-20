@@ -1,0 +1,45 @@
+@media (prefers-color-scheme: light) {
+  a:hover {
+    color: mediumpurple;
+  }
+}
+
+main {
+  text-align: center;
+  padding: 1em;
+  margin: 0 auto;
+}
+
+h2 {
+  color: #00bedc;
+  font-weight: 500;
+  line-height: 2.5rem;
+  font-size: 2rem;
+  margin: 1rem auto;
+}
+
+.settings-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.icon-settings{
+  width: 16px;
+  height: auto;
+  margin-right: 8px;
+}
+.settings-label{
+  color: blue;
+  cursor: pointer;
+}
+.settings-label:hover{
+  color: #eb00eb;
+}
+
+.msg1{
+  font-size: 1.2rem;
+  margin: 2rem 0;
+}
+.msg1 a#how-link{
+  font-size: 1rem !important;
+}

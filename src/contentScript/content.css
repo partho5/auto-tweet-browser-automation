@@ -1,0 +1,24 @@
+/* injectUI.css */
+#twt-auto-post-msg-div {
+    position: fixed;
+    width: 300px;
+    min-height: 50px;
+    max-height: 200px;
+    bottom: 45%;
+    right: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 2px solid #000;
+    color: #000;
+    z-index: 9999; /* Ensures it appears above other elements */
+
+    display: flex;
+    justify-content: center; /* Centers content horizontally */
+    align-items: center; /* Centers content vertically */
+}
+
+#twt-auto-post-msg {
+    font-size: 14px;
+    color: black;
+    font-family: "Courier New", sans-serif;
+}
