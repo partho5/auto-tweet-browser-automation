@@ -1,7 +1,8 @@
 // TweeterInteract.ts
 
 // Function to type a message into the Twitter text area
-import {addOrSubtractRandomNumber} from "../formatter/Numbers";
+import {addOrSubtractRandomNumber, generateRandomNum} from "../formatter/Numbers";
+import {generateContent} from "../data/PostContents";
 
 const typeMessage = (text: string): void => {
     const textArea = document.querySelector('.DraftEditor-editorContainer .public-DraftEditor-content');
@@ -45,8 +46,71 @@ const postMessageWithDelay = (text: string, delay: number): void => {
 }
 
 
+const makePost = (): Promise<boolean> => {
+    const msg = generateContent();
+    return new Promise((resolve) => {
+        if(msg){
+            typeMessage(msg);
+            const delay = generateRandomNum(1000, 3000); // 1 sec to 3 sec
+            setTimeout(() => {
+                //console.log(`Posted  at ${new Date().toLocaleString()}`);
+                clickPostButton();
+                resolve(true); // Resolve the promise with success (true)
+            }, delay);
+        }
+    });
+};
+
+
+function dailyPostingQuotaExceeded(): boolean {
+    const elements = document.querySelectorAll('div');
+
+    for (const element of elements) {
+        if (element.textContent?.includes("You are over the daily limit for sending posts")) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+function clearDailyLimitMessage(): void {
+    try{
+        // Select the specific span containing the message
+        const messageElement = document.querySelector<HTMLSpanElement>('div.css-175oi2r.r-1habvwh.r-13awgt0.r-1777fci span.css-1jxf684');
+
+        if (messageElement && messageElement.textContent?.includes("You are over the daily limit for sending posts")) {
+            messageElement.textContent = ''; // Clear the content of the specific span
+        }
+    }catch (e){
+        console.error("could not clear input field", e)
+    }
+}
+
+
+// Function to clear the Twitter input field
+function clearInputField(): void {
+    try{
+        // Select the content-editable input field by its data-testid attribute
+        const tweetInputField = document.querySelector('div[contenteditable="true"][data-testid="tweetTextarea_0"]');
+
+        // Clear the input field
+        if (tweetInputField) {
+            tweetInputField.innerHTML = ''; // Clear the content
+        }
+    }catch (e){
+        console.error('could not clear field', e)
+    }
+}
+
+
 export {
     postMessageWithDelay,
     typeMessage,
-    clickPostButton
+    clickPostButton,
+    makePost,
+    dailyPostingQuotaExceeded,
+    clearDailyLimitMessage,
+    clearInputField,
 };

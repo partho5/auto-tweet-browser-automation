@@ -16,7 +16,9 @@ const setText = (selector: string, text: string): void => {
     }
 }
 
-/** Displays or hides the message based on the provided text and auto-hide option */
+/** Displays or hides the message based on the provided text and auto-hide option.
+ * \n supported as a new line character.
+ * */
 const setMsg = (msgText: string, autoHide: boolean = false): void => {
     msgText = msgText.replace(/\n/g, '<br>'); // interpret \n as <br>
     if (msgText.trim() === '') {
@@ -41,7 +43,6 @@ const hideMsg = (): void => {
 }
 
 export {
-    setText,
     setMsg,
     hideMsg
 };

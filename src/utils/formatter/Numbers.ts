@@ -10,6 +10,11 @@ const generateRandomNum = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
+const randomMillis = (min: number, max: number) =>{
+    const factor = 1000;
+    return generateRandomNum(min*factor, max*factor);
+}
+
 function addOrSubtractRandomNumber(inputNum: number): number {
     const rand = generateRandomNum(5*1000, 20*1000); // 5 sec to 20 sec
 
@@ -21,5 +26,6 @@ function addOrSubtractRandomNumber(inputNum: number): number {
 
 export {
     generateRandomNum,
-    addOrSubtractRandomNumber
+    addOrSubtractRandomNumber,
+    randomMillis
 };

@@ -39,6 +39,29 @@ export const Options: React.FC = () => {
         retrieveContent();
     }, []);
 
+    const handleAPIcall = () => {
+        let userId = 456;
+        const apiUrl = `https://jovoc.com/api/user/payment/verification_status?userId=${userId}`;
+
+        fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer YOUR_API_KEY',
+            },
+        })
+            .then((response) => {
+                return response.json();  // Convert response to JSON
+            })
+            .then((data) => {
+                console.log('isVerified=', data?.isVerified);  // Use the actual parsed data
+            })
+            .catch((error) => {
+                console.error('Error:', error);  // Handle errors if any
+            });
+    };
+
+
+    // @ts-ignore
     return (
         <main>
             <section className="content">
@@ -58,6 +81,10 @@ export const Options: React.FC = () => {
                     <div className="btn-container">
                         <button onClick={saveContent} className="btn btn-save">Save Content</button>
                     </div>
+                </div>
+
+                <div className="row">
+                    <button onClick={handleAPIcall}>API call</button>
                 </div>
 
                 <div className="row links">

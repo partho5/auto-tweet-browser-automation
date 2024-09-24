@@ -20,10 +20,7 @@ export default defineManifest({
     default_icon: 'img/logo-48.png',
   },
   options_page: 'options.html',
-  background: {
-    service_worker: 'src/background/index.ts',
-    type: 'module',
-  },
+
   content_scripts: [
     {
       matches: ["*://*.x.com/*"],
@@ -37,5 +34,8 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['storage', 'activeTab'],
+  permissions: ['storage'],
+  host_permissions: [
+    "*://jovoc.com/*"
+  ],
 })

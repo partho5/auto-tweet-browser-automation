@@ -4,6 +4,10 @@ export const hourToMilliseconds = (hour: number) => {
     return hour * 3600 * 1000;
 }
 
+export const minuteToMilliseconds = (minute: number) => {
+    return minute * 60 * 1000;
+}
+
 
 /**
  * Calculates the delay between posts in milliseconds.

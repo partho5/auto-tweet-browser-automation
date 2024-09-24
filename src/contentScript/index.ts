@@ -20,7 +20,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if(request?.TYPE === 'action' && request?.MESSAGE === 'startBot'){
        // console.log('trigger bot here');
        startBot();
-       setMsg('Bot initializing ⚡...')
+
+        setMsg('Bot 🤖 initializing ⚡...');
+        setTimeout(()=>{
+            setMsg('⏳ Preparing contents...');
+        }, 1000);
+        setTimeout(()=>{
+            setMsg('🤖 Scheduled 🕒 for posting...');
+        }, 2000);
     }
 
     // Respond with some data if needed
