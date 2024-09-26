@@ -53,3 +53,33 @@ export const formatDateTime = (date: Date): string => {
 
     return `${month}/${day}/${year} ${hours}:${minutes}:${seconds}`; // Combined date and time
 };
+
+
+/**
+ * Adds the specified milliseconds to the current time and returns the resulting time
+ * in a human-readable 12-hour clock format.
+ *
+ * @param millisToAdd - The number of milliseconds to add to the current time.
+ * @returns A string representing the time after adding the specified milliseconds,
+ * formatted as "hh:mm:ss AM/PM".
+ *
+ * - Hours are converted to a 12-hour format (1-12).
+ * - Minutes are zero-padded to ensure two digits.
+ * - Seconds are zero-padded to ensure two digits.
+ * - The string is suffixed with either "AM" or "PM" based on the time of day.
+ */
+
+export const clockTimeAfter = (millisToAdd: number): string => {
+    const date = new Date(Date.now() + millisToAdd);
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const sec = date.getSeconds();
+
+    // Format hours and minutes
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    const formattedMinutes = minutes.toString().padStart(2, '0'); // Add leading zero if needed
+    const formattedSec = sec.toString().padStart(2, '0'); // Add leading zero if needed
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    return `${formattedHours}:${formattedMinutes}:${formattedSec} ${ampm}`;
+}

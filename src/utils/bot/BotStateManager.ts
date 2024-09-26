@@ -1,28 +1,35 @@
+import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
+
 interface BotState {
-    postCount: number;
-    isBotRunning: boolean;
-    [key: string]: any; // Any additional state fields you might need
+    botState: boolean;
+    minGap: number;
+    maxGap: number;
 }
 
 const defaultBotState: BotState = {
-    postCount: 0,
-    isBotRunning: true, // Default state of the bot
+    botState: false,
+    minGap: defaultPostingGapMin,
+    maxGap: defaultPostingGapMax,
 };
 
-// Function to load the bot's state from Chrome's local storage
 const loadBotState = (callback: (botState: BotState) => void): void => {
-    chrome.storage.local.get(['botState'], (result) => {
-        // If botState is not found, use the default state
-        const botState: BotState = result.botState || defaultBotState;
+    chrome.storage.local.get(['botState', 'minGap', 'maxGap'], (result) => {
+        // Merge the loaded values or fallback to defaults if not found
+        const botState: BotState = {
+            botState: result.botState !== undefined ? result.botState : defaultBotState.botState,
+            minGap: result.minGap !== undefined ? result.minGap : defaultBotState.minGap,
+            maxGap: result.maxGap !== undefined ? result.maxGap : defaultBotState.maxGap,
+        };
 
         // Call the provided callback function with the loaded state
         callback(botState);
     });
 };
 
+
 // Example usage: Load the state and log it
 loadBotState((botState) => {
-    console.log('Loaded bot state:', botState);
+    //console.log('Loaded bot state:', botState);
 });
 
 export { loadBotState };

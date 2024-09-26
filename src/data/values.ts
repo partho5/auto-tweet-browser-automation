@@ -1,9 +1,11 @@
-const appName: string = 'Twitter Bot';
-const uniqueModifierChars = ['.', '$', '🙂', '🔥', '💡', '🔔', '⭐', '📢', '✅', '⚡', '💲', '💪', '🤖', '💚', '👍', '💛', '✔️', '💻', '💎', '🔆'];
-const displayMsgId = 'twt-auto-post-msg';
+export const appName: string = 'Twitter Bot';
+export const displayMsgId = 'twt-auto-post-msg';
 
-export {
-    appName,
-    uniqueModifierChars,
-    displayMsgId
-};
+//export const uniqueModifierChars = ['.', '$', '🙂', '🔥', '💡', '🔔', '⭐', '📢', '✅', '⚡', '💲', '💪', '🤖', '💚', '👍', '💛', '✔️', '💻', '💎', '🔆'];
+export const uniqueModifierChars = [' ', '.', ',', '-'];
+export const tickers = ['SEEL', 'NVDA', 'SQQQ', 'FXI', 'MSS', 'TRNR', 'TSLA', 'INTC', 'SOXL', 'PLTR', 'BNZI', 'TSLL', 'KWEB', 'SOXS', 'TELL', 'YANG', 'XPON', 'EEM', 'NUKK', 'TQQQ', 'SOFI', 'NVD', 'HE', 'SLV', 'LAZR', 'MARA', 'CAPR', 'LUXH', 'SPXS', 'SMAR', 'XLF', 'WULF', 'PLUG', 'TLT', 'F', 'NVDQ', 'SPY', 'SH', 'NVDL', 'OPEN', 'CCL', 'RIVN', 'AMZN', 'TZA', 'AMD', 'HYG', 'DJT', 'QQQ', 'LCID', 'LQD', 'AAPL', 'AGNC', 'FCX', 'CLSK', 'HSCS', 'AAL', 'U', 'FPH', 'UVIX', 'FCEL', 'WBD', 'DUST', 'IWM', 'EWZ', 'MU', 'CIFR', 'LUMN', 'LUNR', 'ASHR', 'SNAP', 'CSCO', 'IBIT', 'T', 'SWN', 'BAC', 'YINN', 'CMCSA', 'LABD', 'AVGO', 'UEC', 'PFE', 'XLE', 'GDX', 'CLF', 'SMR', 'ETH', 'RIOT', 'TNA', 'APLD', 'ELAB', 'UBER', 'GOOGL', 'TECS', 'WBA', 'HL', 'WFC', 'NKE', 'GME', 'BOIL', 'OCGN', 'OLPX', 'SPAB', 'FRGT', 'MCHI', 'TMF', 'SOUN', 'MSFT', 'META', 'VERB', 'UVXY', 'INFN', 'SDOW', 'SDS', 'TNXP', 'XLU', 'PYPL', 'NCLH', 'BMY', 'WMT', 'UAA', 'AUR', 'KOS', 'AFRM', 'LYFT', 'KSS', 'KO', 'BLUE', 'MPW', 'V', 'SPXU', 'NVDX', 'VWO', 'LBRDK', 'KVUE', 'BKLN', 'SLB', 'GPN', 'MSOS', 'VZ', 'MSTR', 'ET', 'WVE', 'GBNY', 'LBRDA', 'ONCO', 'AIXI', 'POET', 'GHSI', 'FLYX', 'LWAY', 'LSF', 'RIGL', 'HUMA', 'BZ', 'CHSN', 'AAOI', 'ICG', 'TME', 'HCWC', 'HUDI', 'BILI', 'TIGR', 'KC', 'HKD', 'ATUS', 'EDUC', 'SKIL', 'TDTH', 'MP', 'LAAC', 'QMMM', 'SNES', 'EH', 'VERI', 'BMR', 'ZVRA', 'JD', 'IQ', 'MKFG', 'IE', 'IREN', 'PLL', 'AIRS', 'FUTU', 'BKTI', 'PDD', 'TECX', 'EXK', 'LI', 'CDE', 'YMM', 'XPEV', 'WB', 'METC', 'DQ', 'BYRN', 'SOC', 'HTHT', 'SID', 'LUCY', 'SVM', 'MOMO', 'LU', 'NIO', 'NFGC', 'MGOL', 'SERA', 'TGB', 'TSE', 'HBM', 'GOTU', 'TRVN', 'RRGB', 'GATO', 'LKCO', 'LFMD', 'HSAI', 'MUX', 'OKLO', 'HCC', 'EDU', 'HBB', 'RAPP', 'HNRG', 'AG', 'NOAH', 'AA', 'LLYVK', 'SEZL', 'BYND'];
+
+export const postSentence1 ='New alerts have been posted in the last hours:-';
+export const link1 = 'https://discord.gg/nwrJ25rs';
+export const defaultPostingGapMin = 5; //sec
+export const defaultPostingGapMax = 15; //sec

@@ -1,9 +1,16 @@
 // Simulating the posting quota logic
 import {loadBotState} from "./BotStateManager";
-import {clearDailyLimitMessage, clearInputField, dailyPostingQuotaExceeded, makePost} from "./TweeterInteract";
+import {
+    clearDailyLimitMessage,
+    clearInputField,
+    dailyPostingQuotaExceeded,
+    duplicatePostContentDetected,
+    makePost
+} from "./TweeterInteract";
 import {setMsg} from "../ui/msgLog";
 import {generateRandomNum, randomMillis} from "../formatter/Numbers";
-import {hourToMilliseconds, minuteToMilliseconds} from "../time/TimeUtils";
+import {clockTimeAfter, hourToMilliseconds, minuteToMilliseconds} from "../time/TimeUtils";
+import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
 
 
 let timeoutId: number | null = null;
@@ -15,12 +22,22 @@ const SESSION_GAP = 3; // 3-hour pause
 const DAILY_POSTING_QUOTA = 2400; // Total quota for the day
 
 // Function to start posting with random intervals
-const startBot = (): void => {
-    const randomDelay = randomMillis(5, 7);
+const startBot = async (): Promise<void> => {
+    const result = await chrome.storage.local.get(['minGap', 'maxGap']);
+    const min = result.minGap || defaultPostingGapMin;
+    const max = result.maxGap || defaultPostingGapMax;
+    //console.log(min, max)
+
+    const randomDelay = randomMillis(min, max); // args in seconds
+    setTimeout(() => {
+        const readableTime = clockTimeAfter(randomDelay);
+        setMsg(`Next post at ${readableTime}`);
+    }, 3000);
 
     timeoutId = window.setTimeout(async () => {
         // Load bot state from chrome storage
         loadBotState(async (botState) => {
+            //console.log('botState', botState);
             if (!dailyPostingQuotaExceeded()) {
                 const result = await makePost();
                 if (result) {
@@ -55,7 +72,7 @@ const stopBot = (): void => {
         clearTimeout(timeoutId);
         timeoutId = null;
     }
-    console.log('Bot stopped.');
+    //console.log('Bot stopped.');
 };
 
 export { startBot, stopBot };

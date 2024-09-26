@@ -1,0 +1,33 @@
+.time-gap-container {
+
+}
+
+.hints {
+    margin-bottom: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.input-group-wrapper {
+    display: flex;
+    gap: 1rem;
+}
+
+.input-group {
+    flex: 1;
+}
+
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+}
+
+input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}

@@ -13,12 +13,15 @@ const typeMessage = (text: string): void => {
 }
 
 const clearPostField = (): void => {
-    const textArea = document.querySelector('.DraftEditor-editorContainer .public-DraftEditor-content');
-    if (textArea) {
-        (textArea as HTMLElement).focus();
-        document.execCommand('selectAll', false); // Selects all the text in the field
-        document.execCommand('delete', false); // Deletes the selected text
-    }
+    try {
+        const textArea = document.querySelector('.DraftEditor-editorContainer .public-DraftEditor-content');
+        if (textArea) {
+            (textArea as HTMLElement).focus();
+            document.execCommand('selectAll', false); // Selects all the text in the field
+            document.execCommand('delete', false); // Deletes the selected text
+            //console.log('clearPostField');
+        }
+    }catch (e){}
 }
 
 // Function to click the post button
@@ -31,30 +34,35 @@ const clickPostButton = (): void => {
     }
 }
 
-// Function to post a message with a delay
-const postMessageWithDelay = (text: string, delay: number): void => {
-    delay = addOrSubtractRandomNumber(delay);
-    setTimeout(() => {
-        console.log(`postDelay=${delay} - ${new Date()}`);
-        typeMessage(text);
-
-        // Add another delay before clicking the post button to ensure the text is typed
-        setTimeout(() => {
-            clickPostButton();
-        }, 1000); // Delay for text to register before clicking
-    }, delay);
-}
-
-
-const makePost = (): Promise<boolean> => {
+const makePost = async (): Promise<boolean> => {
     const msg = generateContent();
     return new Promise((resolve) => {
         if(msg){
             typeMessage(msg);
-            const delay = generateRandomNum(1000, 3000); // 1 sec to 3 sec
+
+            //close link preview
+            let delay = generateRandomNum(1000, 2500); // millisecond
             setTimeout(() => {
-                //console.log(`Posted  at ${new Date().toLocaleString()}`);
+                closeLinkPreviewIfFound();
+            }, delay);
+
+            // click post button
+            delay = generateRandomNum(2700, 3500);
+            setTimeout(() => {
+                //console.log(`${msg} - Posted  at ${new Date().toLocaleString()}`);
                 clickPostButton();
+
+                //here content duplicity warning may arise (in rare cases), so check for duplicity
+                setTimeout(()=>{
+                    if(duplicatePostContentDetected()){
+                        // then write something
+                        clearPostField();
+                        setTimeout(()=>{
+                            typeMessage(' . ');
+                        }, 300);
+                    }
+                }, 300);
+
                 resolve(true); // Resolve the promise with success (true)
             }, delay);
         }
@@ -73,6 +81,7 @@ function dailyPostingQuotaExceeded(): boolean {
 
     return false;
 }
+
 
 
 function clearDailyLimitMessage(): void {
@@ -105,12 +114,46 @@ function clearInputField(): void {
 }
 
 
+const duplicatePostContentDetected = () => {
+    const textToFind = 'Whoops! You already said that.';
+    const elements = document.body.getElementsByTagName('*');
+    for (let i = 0; i < elements.length; i++) {
+        if (elements[i].textContent?.includes(textToFind)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+const clickLike = () => {
+    try {
+        const btn = document.querySelector('button[data-testid="like"]');
+        if(btn){
+            (btn as HTMLElement).click();
+        }
+    }catch (e){}
+}
+
+const closeLinkPreviewIfFound = () => {
+    try {
+        const button = document.querySelector('button[aria-label="Remove card preview"]');
+
+        // Check if the button exists and then click it
+        if (button) {
+            (button as HTMLElement).click();
+        } else {
+            console.log('Link preview Button not found');
+        }
+    }catch (e){}
+}
+
 export {
-    postMessageWithDelay,
     typeMessage,
     clickPostButton,
     makePost,
     dailyPostingQuotaExceeded,
     clearDailyLimitMessage,
     clearInputField,
+    duplicatePostContentDetected
 };

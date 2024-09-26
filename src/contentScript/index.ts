@@ -1,6 +1,7 @@
-import {startBot} from "../utils/bot/Run";
+import {startBot, stopBot} from "../utils/bot/Run";
 import {displayMsgId} from "../data/values";
 import {setMsg} from "../utils/ui/msgLog";
+import {contentLines, uniqueModifier} from "../utils/data/PostContents";
 
 
 const injectUI = () => {
@@ -17,17 +18,21 @@ injectUI();
 // Listener in the content script to receive messages from the extension
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     // console.log('request', request);
-    if(request?.TYPE === 'action' && request?.MESSAGE === 'startBot'){
-       // console.log('trigger bot here');
-       startBot();
+    if(request?.TYPE === 'action'){
+       if (request?.MESSAGE === 'startBot'){
+           // console.log('trigger bot here');
+           startBot();
 
-        setMsg('Bot 🤖 initializing ⚡...');
-        setTimeout(()=>{
-            setMsg('⏳ Preparing contents...');
-        }, 1000);
-        setTimeout(()=>{
-            setMsg('🤖 Scheduled 🕒 for posting...');
-        }, 2000);
+           setMsg('Bot 🤖 initializing ⚡...');
+           setTimeout(()=>{
+               setMsg('⏳ Preparing contents...');
+           }, 1000);
+           setTimeout(()=>{
+               setMsg('🤖 Scheduled 🕒 for posting...');
+           }, 2000);
+       } else if (request?.MESSAGE === 'stopBot'){
+           stopBot();
+       }
     }
 
     // Respond with some data if needed

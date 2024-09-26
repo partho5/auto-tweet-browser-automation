@@ -1,0 +1,61 @@
+.message-box {
+    position: fixed;
+    bottom: -100px; /* Adjusted to start off-screen */
+    right: 20px;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(20px) scale(0.5); /* Start slightly below */
+    transition: all 0.3s ease;
+    max-width: 400px;
+    min-width: 200px;
+    text-align: center;
+    z-index: 9999;
+}
+
+.message-box.fade-in {
+    opacity: 1;
+    transform: translateY(0) scale(1); /* Slide in to position */
+    bottom: 10%; /* Position it at 10% from the bottom */
+}
+
+.message-box.fade-out {
+    opacity: 0;
+    transform: translateY(20px) scale(0.8); /* Slide out slightly downwards */
+    bottom: -100px; /* Move off-screen */
+}
+
+.message-box.default {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.message-box.success {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+.message-box.error {
+    background-color: #f44336;
+    color: #fff;
+}
+
+.message-content {
+    margin-right: 1.5rem;
+}
+
+.message-close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: inherit;
+}
+
+.message-close:focus {
+    outline: none;
+}

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Options.css';
 import { appName } from "../data/values";
+import TimeGap from "../utils/ui/components/TimeGap";
+import {showPopupMessage} from "../utils/ui/components/notifications/showPopupMessage";
 
 // Define the types for saved content
 interface StoredContent {
@@ -20,6 +22,8 @@ export const Options: React.FC = () => {
         const contentArray = postContent.split('\n'); // Split content by new lines
         chrome.storage.local.set({ content: contentArray }, () => {
             console.log('Content saved successfully!');
+
+            showPopupMessage('Content Saved', 'success');
         });
     };
 
@@ -40,8 +44,7 @@ export const Options: React.FC = () => {
     }, []);
 
     const handleAPIcall = () => {
-        let userId = 456;
-        const apiUrl = `https://jovoc.com/api/user/payment/verification_status?userId=${userId}`;
+        const apiUrl = `https://jovoc.com/api/...`;
 
         fetch(apiUrl, {
             method: 'GET',
@@ -83,13 +86,18 @@ export const Options: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="row">
-                    <button onClick={handleAPIcall}>API call</button>
+                <div className="row time-gap">
+                    <TimeGap />
                 </div>
 
+                {/*<div className="row">*/}
+                {/*    <button onClick={handleAPIcall}>API call</button>*/}
+                {/*</div>*/}
+
                 <div className="row links">
-                <p className="developer">
-                        Developed by: <a href="https://www.linkedin.com/in/partho5" target="_blank" rel="noreferrer">Partho Protim</a>
+                    <p className="developer">
+                        Developed by: <a href="https://www.linkedin.com/in/partho5" target="_blank" rel="noreferrer">Partho
+                        Protim</a>
                     </p>
                 </div>
             </section>

@@ -2,8 +2,10 @@ import './Popup.css'
 import settingsIcon from '../../public/icons/settings-icon.png';
 import {openSettingsPage} from "../utils/ui/Actions";
 import {appName} from "../data/values";
+import {useState} from "react";
 
 
+// this message is received by contentScript
 const sendMessageToContentScript = (type: string, message: string) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const activeTab = tabs[0];
@@ -19,9 +21,13 @@ const sendMessageToContentScript = (type: string, message: string) => {
 
 export const Popup = () => {
 
+    const [botRunning, setBotRunning] = useState(false);
+
     const handleAppStartClick = () => {
-        sendMessageToContentScript('action', 'startBot');
-        window.close();
+        setBotRunning(!botRunning); // toggle state
+        let command = botRunning ? 'stopBot' : 'startBot';
+        sendMessageToContentScript('action', command);
+        //window.close();
     }
 
   return (
