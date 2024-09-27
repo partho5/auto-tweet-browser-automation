@@ -1,4 +1,5 @@
 import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
+import {todayFullDate} from "../time/TimeUtils";
 
 interface BotState {
     botState: boolean;
@@ -27,10 +28,53 @@ const loadBotState = (callback: (botState: BotState) => void): void => {
 };
 
 
-export const savePostCount = (postCount: number) => {
+export const savePostCount2 = (postCount: number) => {
     // here used sync instead of local, so that multiple devices keep track of post count for a particular user.
-    chrome.storage.sync.set({'totalPostCount': postCount})
+    chrome.storage.sync.set({'todayPostCount': postCount})
 }
+
+export const savePostCount = (postCount: number) => {
+    const today = todayFullDate();
+
+    chrome.storage.sync.get('dailyPostCount', (data) => {
+        const dailyPostCount = data.dailyPostCount || {};
+        dailyPostCount[today] = postCount; // Update today's count
+
+        chrome.storage.sync.set({'dailyPostCount': dailyPostCount});
+    });
+};
+
+export const getTodayPostCount = async (): Promise<number> => {
+    const today = todayFullDate();
+
+    const { dailyPostCount = {} } = await chrome.storage.sync.get(['dailyPostCount']);
+    console.log('dailyPostCount', dailyPostCount);
+    return dailyPostCount[today] || 0; // Return today's count or 0 if not found
+};
+
+
+
+// NOT complete yet
+export const getLast30DaysPostCounts = (callback: (counts: { date: string; count: number }[]) => void) => {
+    chrome.storage.sync.get('dailyPostCounts', (data) => {
+        const dailyPostCounts = data.dailyPostCounts || {};
+        const counts: { date: string; count: number }[] = [];
+        const today = new Date();
+
+        for (let i = 0; i < 30; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            const formattedDate = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+            counts.push({
+                date: formattedDate,
+                count: dailyPostCounts[formattedDate] || 0 // Default to 0 if no count
+            });
+        }
+
+        callback(counts); // Return the counts for the last 30 days
+    });
+};
+
 
 
 // Example usage: Load the state and log it

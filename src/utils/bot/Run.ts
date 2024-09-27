@@ -1,5 +1,5 @@
 // Simulating the posting quota logic
-import {loadBotState, savePostCount} from "./BotStateManager";
+import {getTodayPostCount, loadBotState, savePostCount} from "./BotStateManager";
 import {
     clearDailyLimitMessage,
     clearInputField,
@@ -15,7 +15,7 @@ import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
 
 let timeoutId: number | null = null;
 let postCount = 0; // in current session
-let totalPostCount = 0; // total of all time
+let todayPostCount = 0; // total of all time
 
 const MAX_POSTS_PER_SESSION = 300; // Maximum posts in a session
 const TARGET_POST_COUNT = 300; // How many tweet you want in one session
@@ -28,9 +28,10 @@ const startBot = async (): Promise<void> => {
     const min = result.minGap || defaultPostingGapMin;
     const max = result.maxGap || defaultPostingGapMax;
 
-    result = await chrome.storage.sync.get(['totalPostCount']);
-    totalPostCount = result.totalPostCount || 0;
-    //console.log('postCount', totalPostCount);
+    result = await chrome.storage.sync.get(['todayPostCount']);
+    todayPostCount = result.todayPostCount || 0;
+    todayPostCount = await getTodayPostCount();
+    console.log('todayPostCount', todayPostCount);
 
     const randomDelay = randomMillis(min, max); // args in seconds
     setTimeout(() => {
@@ -46,8 +47,8 @@ const startBot = async (): Promise<void> => {
                 const result = await makePost();
                 if (result) {
                     ++postCount;
-                    ++totalPostCount;
-                    savePostCount(totalPostCount);
+                    ++todayPostCount;
+                    savePostCount(todayPostCount);
                     const remaining = Math.max(0, MAX_POSTS_PER_SESSION-postCount);
                     setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
                     //console.log(`post #${postCount} - delayed ${randomDelay} sec`);

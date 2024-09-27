@@ -83,3 +83,9 @@ export const clockTimeAfter = (millisToAdd: number): string => {
 
     return `${formattedHours}:${formattedMinutes}:${formattedSec} ${ampm}`;
 }
+
+
+export const todayFullDate = () => {
+    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    return today;
+}

@@ -34,7 +34,9 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['storage'],
+  permissions: [
+      'storage',
+  ],
   host_permissions: [
     "*://jovoc.com/*"
   ],

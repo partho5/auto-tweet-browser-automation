@@ -18,6 +18,31 @@ h2 {
   margin: 1rem auto;
 }
 
+/* Start/Stop button */
+.btn-trigger {
+  background-color: #00bedc;
+  color: #fff;
+  border: 1px solid #00a1b5;
+  border-radius: 5px; /* Rounded corners */
+  padding: 10px 20px; /* Increased padding for a better look */
+  font-size: 16px; /* Larger font size */
+  font-weight: bold; /* Bold text */
+  text-transform: uppercase; /* Uppercase text for emphasis */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.btn-trigger:hover {
+  background-color: #0099b5; /* Darker shade on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.btn-trigger.running {
+  background-color: red; /* Color for running state */
+  border-color: darkred; /* Darker border for contrast */
+}
+
+
 .settings-container{
   display: flex;
   align-items: center;

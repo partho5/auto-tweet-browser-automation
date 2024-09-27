@@ -55,8 +55,6 @@ export const hidePopupMsg = (type: MessageType) => {
     if (message) {
         // Apply fade-out animation
         message.classList.add('fade-out');
-        setTimeout(() => {
-            document.body.removeChild(message);
-        }, 300); // Match this with the duration of the fade-out animation
+        document.body.removeChild(message);
     }
 };
