@@ -27,7 +27,7 @@ export const Popup = () => {
         setBotRunning(!botRunning); // toggle state
         let command = botRunning ? 'stopBot' : 'startBot';
         sendMessageToContentScript('action', command);
-        //window.close();
+        window.close();
     }
 
   return (

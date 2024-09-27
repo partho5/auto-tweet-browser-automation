@@ -1,12 +1,12 @@
 .message-box {
     position: fixed;
-    bottom: -100px; /* Adjusted to start off-screen */
+    bottom: -20px; /* Adjusted to start off-screen */
     right: 20px;
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     opacity: 0;
-    transform: translateY(20px) scale(0.5); /* Start slightly below */
+    transform: translateY(20px) scale(0.8); /* Start slightly below */
     transition: all 0.3s ease;
     max-width: 400px;
     min-width: 200px;
@@ -43,6 +43,11 @@
 
 .message-content {
     margin-right: 1.5rem;
+}
+
+/* show success message slightly upper to error message. Beneficial when two different types arise simultaneously */
+.message-box.success.fade-in{
+    bottom: 20%;
 }
 
 .message-close {
