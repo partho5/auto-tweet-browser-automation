@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './TimeGap.css'
-import {showPopupMessage} from "./notifications/showPopupMessage";
+import {hidePopupMsg, showPopupMessage} from "./notifications/showPopupMessage";
 import {defaultPostingGapMax, defaultPostingGapMin} from "../../../data/values";
 
 const TimeGap: React.FC = () => {
@@ -24,10 +24,12 @@ const TimeGap: React.FC = () => {
 
     // min value must be < max value
     useEffect(() => {
-        if (parseInt(minGap) >= parseInt(maxGap) && minGap !== '' && maxGap !== '') {
+        if (minGap === '' || maxGap === '' || parseInt(minGap) >= parseInt(maxGap)) {
+            console.log('min < max -false')
             showPopupMessage('<u>Posting Time Gap</u>: Maximum value must be greater than minimum value.', 'error');
         } else {
-
+            hidePopupMsg('error')
+            console.log('min < max -OK')
         }
     }, [minGap, maxGap]);
 

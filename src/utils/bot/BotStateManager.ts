@@ -27,6 +27,12 @@ const loadBotState = (callback: (botState: BotState) => void): void => {
 };
 
 
+export const savePostCount = (postCount: number) => {
+    // here used sync instead of local, so that multiple devices keep track of post count for a particular user.
+    chrome.storage.sync.set({'totalPostCount': postCount})
+}
+
+
 // Example usage: Load the state and log it
 loadBotState((botState) => {
     //console.log('Loaded bot state:', botState);

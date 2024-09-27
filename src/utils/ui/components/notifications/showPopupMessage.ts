@@ -16,6 +16,7 @@ export const showPopupMessage = (html: string, type: MessageType = 'default') =>
         return; // Exit early if replacing
     }
 
+
     // Create the message container
     const message = document.createElement('div');
     message.classList.add('message-box', type);
@@ -45,5 +46,17 @@ export const showPopupMessage = (html: string, type: MessageType = 'default') =>
                 document.body.removeChild(message);
             }, 300); // Match this with the duration of the fade-out animation
         });
+    }
+};
+
+
+export const hidePopupMsg = (type: MessageType) => {
+    const message = document.querySelector(`.message-box.${type}`);
+    if (message) {
+        // Apply fade-out animation
+        message.classList.add('fade-out');
+        setTimeout(() => {
+            document.body.removeChild(message);
+        }, 300); // Match this with the duration of the fade-out animation
     }
 };

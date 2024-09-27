@@ -59,7 +59,7 @@ const makePost = async (): Promise<boolean> => {
                         clearPostField();
                         setTimeout(()=>{
                             typeMessage(' . ');
-                        }, 300);
+                        }, 400);
                     }
                 }, 300);
 
