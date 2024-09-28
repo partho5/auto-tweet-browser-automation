@@ -85,7 +85,10 @@ export const clockTimeAfter = (millisToAdd: number): string => {
 }
 
 
-export const todayFullDate = () => {
-    const today = new Date().toISOString().split('T')[0]; // Format: YYYY-MM-DD
-    return today;
+export const todayFullDate = (): string => {
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+    const today = new Date().toLocaleDateString('en-CA', options);
+    return today.replace(/\//g, '-'); // Format: YYYY-MM-DD
 }
+
+

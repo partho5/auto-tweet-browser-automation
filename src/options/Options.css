@@ -68,6 +68,19 @@ h3 {
   padding-bottom: 8px;
 }
 
+/* Package Plans */
+.plan-name.active{
+  font-weight: bold;
+}
+.packages .content{
+  display: flex;
+  align-items: center;
+}
+.packages .btn-container{
+  margin-left: 1rem;
+}
+
+
 /*
 ---------------------------------------------
                   DARK MODE

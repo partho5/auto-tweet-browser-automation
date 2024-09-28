@@ -3,6 +3,7 @@ import './Options.css';
 import { appName } from "../data/values";
 import TimeGap from "../utils/ui/components/TimeGap";
 import {showPopupMessage} from "../utils/ui/components/notifications/showPopupMessage";
+import PackageChanger from "../utils/ui/components/PackageChanger";
 
 // Define the types for saved content
 interface StoredContent {
@@ -19,12 +20,15 @@ export const Options: React.FC = () => {
 
     // Save the content to Chrome's local storage as an array of lines
     const saveContent = () => {
-        const contentArray = postContent.split('\n'); // Split content by new lines
+        const contentArray = postContent.split('\n').filter(line => line.trim() !== ''); // Split content and remove empty lines
         chrome.storage.local.set({ content: contentArray }, () => {
-            console.log('Content saved successfully!');
-
+            //console.log('Content saved successfully!');
             showPopupMessage('Content Saved', 'success');
         });
+
+        // again convert back to string and set in textarea field
+        const contentString = contentArray.join('\n');
+        setPostContent(contentString);
     };
 
     // Retrieve the content from Chrome's local storage
@@ -87,7 +91,22 @@ export const Options: React.FC = () => {
                 </div>
 
                 <div className="row time-gap">
-                    <TimeGap />
+                    <TimeGap/>
+                </div>
+
+                <div className="row packages">
+                    <h4>My Plans</h4>
+                    <div className="hints">
+                        Change Plan anytime, cancel anytime
+                    </div>
+                    <div className="content">
+                        <div>
+                            Active Plan : <span className="plan-name active">Free</span>
+                        </div>
+                        <div className="btn-container">
+                            <PackageChanger />
+                        </div>
+                    </div>
                 </div>
 
                 {/*<div className="row">*/}

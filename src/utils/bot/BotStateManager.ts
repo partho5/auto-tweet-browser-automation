@@ -1,5 +1,8 @@
 import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
-import {todayFullDate} from "../time/TimeUtils";
+import {minuteToMilliseconds, todayFullDate} from "../time/TimeUtils";
+import {clearDailyLimitMessage, clearInputField} from "./TweeterInteract";
+import {setMsg} from "../ui/msgLog";
+import {startBot} from "./Run";
 
 interface BotState {
     botState: boolean;
@@ -27,6 +30,17 @@ const loadBotState = (callback: (botState: BotState) => void): void => {
     });
 };
 
+/*
+* @param delay in minutes
+* */
+export const resumeBotAfter = (delay: number) => {
+    setTimeout(()=>{
+        clearDailyLimitMessage();
+        clearInputField(); // in case previously populated content exists
+        startBot();
+        setMsg('Bot started again');
+    }, minuteToMilliseconds(delay * 60)); // minute to sec
+}
 
 export const savePostCount2 = (postCount: number) => {
     // here used sync instead of local, so that multiple devices keep track of post count for a particular user.
@@ -35,6 +49,7 @@ export const savePostCount2 = (postCount: number) => {
 
 export const savePostCount = (postCount: number) => {
     const today = todayFullDate();
+    console.log('today', today)
 
     chrome.storage.sync.get('dailyPostCount', (data) => {
         const dailyPostCount = data.dailyPostCount || {};
@@ -55,9 +70,9 @@ export const getTodayPostCount = async (): Promise<number> => {
 
 
 // NOT complete yet
-export const getLast30DaysPostCounts = (callback: (counts: { date: string; count: number }[]) => void) => {
-    chrome.storage.sync.get('dailyPostCounts', (data) => {
-        const dailyPostCounts = data.dailyPostCounts || {};
+export const getLast30DaysPostCount = (callback: (counts: { date: string; count: number }[]) => void) => {
+    chrome.storage.sync.get('dailyPostCount', (data) => {
+        const dailyPostCount = data.dailyPostCount || {};
         const counts: { date: string; count: number }[] = [];
         const today = new Date();
 
@@ -67,7 +82,7 @@ export const getLast30DaysPostCounts = (callback: (counts: { date: string; count
             const formattedDate = date.toISOString().split('T')[0]; // Format: YYYY-MM-DD
             counts.push({
                 date: formattedDate,
-                count: dailyPostCounts[formattedDate] || 0 // Default to 0 if no count
+                count: dailyPostCount[formattedDate] || 0 // Default to 0 if no count
             });
         }
 

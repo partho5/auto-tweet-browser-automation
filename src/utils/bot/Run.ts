@@ -1,5 +1,5 @@
 // Simulating the posting quota logic
-import {getTodayPostCount, loadBotState, savePostCount} from "./BotStateManager";
+import {getTodayPostCount, loadBotState, resumeBotAfter, savePostCount} from "./BotStateManager";
 import {
     clearDailyLimitMessage,
     clearInputField,
@@ -36,7 +36,7 @@ const startBot = async (): Promise<void> => {
     const randomDelay = randomMillis(min, max); // args in seconds
     setTimeout(() => {
         const readableTime = clockTimeAfter(randomDelay);
-        setMsg(`Next post at ${readableTime}`);
+        //setMsg(`Next post at ${readableTime}`);
     }, 3000);
 
     timeoutId = window.setTimeout(async () => {
@@ -48,10 +48,16 @@ const startBot = async (): Promise<void> => {
                 if (result) {
                     ++postCount;
                     ++todayPostCount;
-                    savePostCount(todayPostCount);
-                    const remaining = Math.max(0, MAX_POSTS_PER_SESSION-postCount);
-                    setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
-                    //console.log(`post #${postCount} - delayed ${randomDelay} sec`);
+
+                    if(postCount < MAX_POSTS_PER_SESSION){
+                        savePostCount(todayPostCount);
+                        const remaining = Math.max(0, MAX_POSTS_PER_SESSION-postCount);
+                        setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
+                        //console.log(`post #${postCount} - delayed ${randomDelay} sec`);
+                    }else{
+                        stopBot();
+                        resumeBotAfter(MAX_POSTS_PER_SESSION * 60);
+                    }
                 }
             }else{
                 setMsg('Posting quota exceeded 🙄\nYou may have to wait 3 hours');
@@ -59,12 +65,7 @@ const startBot = async (): Promise<void> => {
                 stopBot();
 
                 // After certain time period, start the bot again.
-                setTimeout(()=>{
-                    clearDailyLimitMessage();
-                    clearInputField(); // in case previously populated content exists
-                    startBot();
-                    setMsg('Bot started again');
-                }, minuteToMilliseconds(10)); // try to restart bot after some time. As it's inside a recursive call, so the process will be repeating
+                resumeBotAfter(MAX_POSTS_PER_SESSION * 60);
             }
         });
 
@@ -80,6 +81,7 @@ const stopBot = (): void => {
         timeoutId = null;
     }
     //console.log('Bot stopped.');
+    setMsg('Bot 🤖 waiting to start')
 };
 
 export { startBot, stopBot };

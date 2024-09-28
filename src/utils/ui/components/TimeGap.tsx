@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './TimeGap.css'
 import {hidePopupMsg, showPopupMessage} from "./notifications/showPopupMessage";
-import {defaultPostingGapMax, defaultPostingGapMin} from "../../../data/values";
 
 const TimeGap: React.FC = () => {
     const [minGap, setMinGap] = useState<string>('');
