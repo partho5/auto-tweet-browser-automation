@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 
 
 
-const sendMessageToContentScript = (type: string, message: string, callback: (response: any) => void) => {
+export const sendMessageToContentScript = (type: string, message: string, callback: (response: any) => void) => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const activeTab = tabs[0];
         if (!activeTab?.id) {

@@ -50,3 +50,17 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 });
 
+
+
+export const reloadCurrentTab = (): void => {
+    if (!chrome.tabs) {
+        console.error("chrome.tabs is undefined");
+        return;
+    }
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs.length > 0 && tabs[0].id) {
+            chrome.tabs.reload(tabs[0].id);
+        }
+    });
+}
+

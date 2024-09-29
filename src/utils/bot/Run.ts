@@ -11,6 +11,8 @@ import {setMsg} from "../ui/msgLog";
 import {generateRandomNum, randomMillis} from "../formatter/Numbers";
 import {clockTimeAfter, hourToMilliseconds, minuteToMilliseconds} from "../time/TimeUtils";
 import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
+import {reloadCurrentTab} from "../../contentScript";
+import {sendMessageToContentScript} from "../../popup/Popup";
 
 
 let timeoutId: number | null = null;
@@ -36,7 +38,7 @@ const startBot = async (): Promise<void> => {
     const randomDelay = randomMillis(min, max); // args in seconds
     setTimeout(() => {
         const readableTime = clockTimeAfter(randomDelay);
-        //setMsg(`Next post at ${readableTime}`);
+        console.log(`Next post at ${readableTime}`);
     }, 3000);
 
     timeoutId = window.setTimeout(async () => {
@@ -49,14 +51,18 @@ const startBot = async (): Promise<void> => {
                     ++postCount;
                     ++todayPostCount;
 
-                    if(postCount < MAX_POSTS_PER_SESSION){
+                    if(postCount <= MAX_POSTS_PER_SESSION){
                         savePostCount(todayPostCount);
                         const remaining = Math.max(0, MAX_POSTS_PER_SESSION-postCount);
                         setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
-                        //console.log(`post #${postCount} - delayed ${randomDelay} sec`);
+                        console.log(`post #${postCount} - delayed ${randomDelay} sec`);
                     }else{
                         stopBot();
-                        resumeBotAfter(MAX_POSTS_PER_SESSION * 60);
+                        resumeBotAfter(SESSION_GAP * 60);
+
+                        sendMessageToContentScript('action', 'toggleBotState', (response)=>{
+                            console.log('popup toggleBotState', response);
+                        });
                     }
                 }
             }else{
@@ -81,7 +87,7 @@ const stopBot = (): void => {
         timeoutId = null;
     }
     //console.log('Bot stopped.');
-    setMsg('Bot 🤖 waiting to start')
+    setMsg('Bot 🤖 has been paused')
 };
 
 export { startBot, stopBot };
