@@ -27,8 +27,13 @@ const DAILY_POSTING_QUOTA = 2400; // Total quota for the day
 // Function to start posting with random intervals
 const startBot = async (): Promise<void> => {
     let result = await chrome.storage.local.get(['minGap', 'maxGap']);
-    const min = result.minGap || defaultPostingGapMin;
-    const max = result.maxGap || defaultPostingGapMax;
+    let min = result.minGap || defaultPostingGapMin;
+    let max = result.maxGap || defaultPostingGapMax;
+    // In case user sets inconsistent values, we prevent malfunctioning by setting to default value
+    if(parseInt(min) >= parseInt(max)){
+        min = defaultPostingGapMin;
+        max = defaultPostingGapMax;
+    }
 
     result = await chrome.storage.sync.get(['todayPostCount']);
     todayPostCount = result.todayPostCount || 0;

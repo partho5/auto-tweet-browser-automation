@@ -37,7 +37,7 @@ export const Options: React.FC = () => {
             if (items.content) {
                 setPostContent(items.content.join('\n')); // Join the array back into a string
             } else {
-                console.log('No content found');
+                //console.log('No content found');
             }
         });
     };
@@ -94,7 +94,7 @@ export const Options: React.FC = () => {
                     <TimeGap/>
                 </div>
 
-                <div className="row packages">
+                <div className="row packages" style={{display: "none"}}>
                     <h4>My Plans</h4>
                     <div className="hints">
                         Change Plan anytime, cancel anytime

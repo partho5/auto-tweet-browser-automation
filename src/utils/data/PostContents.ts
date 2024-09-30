@@ -40,7 +40,7 @@ export const generateContent = (): string | null => {
     // console.log('postContentArray', postContentArray);
     // console.log('selectedContent', selectedContent);
 
-    // Update the index for the next generated line
+    // Update the index for the next generated line. If reached last line, set to first line again
     lastUsedLineIndex = (lastUsedLineIndex + 1) % postContentArray.length;
     chrome.storage.local.set({ lastUsedLine: lastUsedLineIndex });
     //console.log('lastUsedLineIndex', lastUsedLineIndex);

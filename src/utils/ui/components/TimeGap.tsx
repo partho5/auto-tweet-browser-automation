@@ -3,42 +3,49 @@ import './TimeGap.css'
 import {hidePopupMsg, showPopupMessage} from "./notifications/showPopupMessage";
 
 const TimeGap: React.FC = () => {
-    const [minGap, setMinGap] = useState<string>('');
-    const [maxGap, setMaxGap] = useState<string>('');
+    const [minGap, setMinGap] = useState<string>('5');
+    const [maxGap, setMaxGap] = useState<string>('13');
 
     // Retrieve saved values from Chrome extension local storage
     useEffect(() => {
-        const getSavedGaps = async () => {
-            const result = await chrome.storage.local.get(['minGap', 'maxGap']);
-            if (result.minGap) setMinGap(result.minGap);
-            if (result.maxGap) setMaxGap(result.maxGap);
-        };
-        getSavedGaps();
+        chrome.storage.local.get(['minGap', 'maxGap'], (result) => {
+            if (result.minGap !== undefined && result.maxGap !== undefined && result.minGap !== '' && result.maxGap !== '') {
+                console.log("minGap maxGap has value", result);
+                setMinGap(result.minGap);
+                setMaxGap(result.maxGap);
+            } else {
+                console.log("minGap or maxGap not set", result.minGap, result.maxGap);
+                // Default values are already set in state initialization
+            }
+        });
     }, []);
 
     // Save values to Chrome extension local storage
     useEffect(() => {
-        chrome.storage.local.set({ minGap, maxGap });
+        // console.log('gap val changed. so save', minGap, maxGap)
+        // chrome.storage.local.set({ minGap, maxGap });
     }, [minGap, maxGap]);
 
     // min value must be < max value
     useEffect(() => {
         if (minGap === '' || maxGap === '' || parseInt(minGap) >= parseInt(maxGap)) {
-            console.log('min < max -false')
+            //console.log('min < max -false')
             showPopupMessage('<u>Posting Time Gap</u>: Maximum value must be greater than minimum value.', 'error');
         } else {
             hidePopupMsg('error')
-            console.log('min < max -OK')
+            //console.log('min < max -OK')
         }
     }, [minGap, maxGap]);
 
     const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMinGap(e.target.value);
+        chrome.storage.local.set({ minGap: e.target.value });
         showPopupMessage('Time gap saved', 'success')
     }
 
     const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setMaxGap(e.target.value);
+        chrome.storage.local.set({ maxGap: e.target.value });
         showPopupMessage('Time gap saved', 'success')
     }
 
@@ -56,7 +63,7 @@ const TimeGap: React.FC = () => {
                         type="number"
                         id="min-gap"
                         min={5}
-                        max={60*6}
+                        max={3600}
                         value={minGap}
                         onChange={handleMinChange}
                         placeholder="Enter minimum gap"
@@ -67,8 +74,8 @@ const TimeGap: React.FC = () => {
                     <input
                         type="number"
                         id="max-gap"
-                        min={6}
-                        max={60*6}
+                        min={parseInt(minGap)+5}
+                        max={3600*4}
                         value={maxGap}
                         onChange={handleMaxChange}
                         placeholder="Enter maximum gap"
