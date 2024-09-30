@@ -18,18 +18,32 @@ export const Options: React.FC = () => {
         setPostContent(e.target.value);
     };
 
+
     // Save the content to Chrome's local storage as an array of lines
     const saveContent = () => {
-        const contentArray = postContent.split('\n').filter(line => line.trim() !== ''); // Split content and remove empty lines
-        chrome.storage.local.set({ content: contentArray }, () => {
-            //console.log('Content saved successfully!');
-            showPopupMessage('Content Saved', 'success');
-        });
+        const trimmedContent = postContent.trim(); // Trim the content to remove leading/trailing spaces
 
-        // again convert back to string and set in textarea field
-        const contentString = contentArray.join('\n');
-        setPostContent(contentString);
+        // Early return if no content
+        if (!trimmedContent) {
+            showPopupMessage('Please write some content', 'error');
+            return;
+        }
+
+        const contentArray = trimmedContent.split('\n').filter(line => line.trim() !== ''); // Split and remove empty lines
+        const contentString = contentArray.join('\n'); // Convert back to string
+
+        setPostContent(contentString); // Update the textarea with formatted content
+
+        if (contentArray.length > 0) {
+            chrome.storage.local.set({ content: contentArray }, () => {
+                showPopupMessage('Content Saved', 'success');
+            });
+        } else {
+            showPopupMessage('Please write some content', 'error');
+        }
     };
+
+
 
     // Retrieve the content from Chrome's local storage
     const retrieveContent = () => {

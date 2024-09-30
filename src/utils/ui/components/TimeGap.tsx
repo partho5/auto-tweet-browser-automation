@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './TimeGap.css'
 import {hidePopupMsg, showPopupMessage} from "./notifications/showPopupMessage";
+import {defaultPostingGapMax, defaultPostingGapMin} from "../../../data/values";
 
 const TimeGap: React.FC = () => {
-    const [minGap, setMinGap] = useState<string>('5');
-    const [maxGap, setMaxGap] = useState<string>('13');
+    const [minGap, setMinGap] = useState<string>(String(defaultPostingGapMin));
+    const [maxGap, setMaxGap] = useState<string>(String(defaultPostingGapMax));
 
     // Retrieve saved values from Chrome extension local storage
     useEffect(() => {
@@ -20,11 +21,6 @@ const TimeGap: React.FC = () => {
         });
     }, []);
 
-    // Save values to Chrome extension local storage
-    useEffect(() => {
-        // console.log('gap val changed. so save', minGap, maxGap)
-        // chrome.storage.local.set({ minGap, maxGap });
-    }, [minGap, maxGap]);
 
     // min value must be < max value
     useEffect(() => {
@@ -74,7 +70,7 @@ const TimeGap: React.FC = () => {
                     <input
                         type="number"
                         id="max-gap"
-                        min={parseInt(minGap)+5}
+                        min={parseInt(minGap)+1} // set 1 more than minimum value
                         max={3600*4}
                         value={maxGap}
                         onChange={handleMaxChange}

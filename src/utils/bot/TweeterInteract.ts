@@ -35,7 +35,7 @@ const clickPostButton = (): void => {
 }
 
 const makePost = async (): Promise<boolean> => {
-    const msg = generateContent();
+    const msg = await generateContent();
     return new Promise((resolve) => {
         if(msg){
             typeMessage(msg);
@@ -65,6 +65,8 @@ const makePost = async (): Promise<boolean> => {
 
                 resolve(true); // Resolve the promise with success (true)
             }, delay);
+        }else{
+            console.log('Could not generate msg')
         }
     });
 };

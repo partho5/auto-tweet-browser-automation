@@ -11,7 +11,7 @@ const generateRandomNum = (min: number, max: number): number => {
 }
 
 const randomMillis = (min: number, max: number) =>{
-    console.log('min', min, 'max', max)
+    //console.log('min', min, 'max', max)
     const factor = 1000;
     return generateRandomNum(min*factor, max*factor);
 }

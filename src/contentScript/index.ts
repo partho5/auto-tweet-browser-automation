@@ -29,23 +29,28 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if (request.MESSAGE === 'toggleBotState') {
-            botRunning = !botRunning;
+            chrome.storage.local.get(['content'], (result) => {
+                if(result.content){
+                    botRunning = !botRunning;
+                    if(botRunning){
+                        startBot();
+                        setMsg('Bot 🤖 initializing ⚡...');
+                        setTimeout(() => {
+                            setMsg('⏳ Preparing contents...');
+                        }, 500);
+                        setTimeout(() => {
+                            setMsg('🤖 Scheduled 🕒 for posting...');
+                        }, 1000);
+                    }else {
+                        stopBot();
+                    }
 
-            if(botRunning){
-                startBot();
-                setMsg('Bot 🤖 initializing ⚡...');
-                setTimeout(() => {
-                    setMsg('⏳ Preparing contents...');
-                }, 500);
-                setTimeout(() => {
-                    setMsg('🤖 Scheduled 🕒 for posting...');
-                }, 1000);
-            }else {
-                stopBot();
-            }
-
-            sendResponse({ botRunning });
-            return true;
+                    sendResponse({ botRunning });
+                    return true;
+                }else{
+                    setMsg('No content found !\nYou can add content in settings');
+                }
+            });
         }
     }
 });

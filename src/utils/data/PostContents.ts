@@ -7,27 +7,29 @@ let postContentArray: string[] = [];
 let lastUsedLineIndex: number = 0;
 
 // Function to retrieve content from storage synchronously
-const loadContentFromStorage = (): void => {
-    chrome.storage.local.get(['content'], (items) => {
-        if (items.content) {
-            postContentArray = items.content;
-        } else {
-            console.log('No content found in storage');
-            setMsg('No content found in storage')
-        }
+const loadContentFromStorage = async (): Promise<void> => {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['content'], (items) => {
+            if (items.content) {
+                postContentArray = items.content;
+            } else {
+                console.log('No content found in storage');
+                setMsg('No content found in storage');
+            }
 
-        chrome.storage.local.get(['lastUsedLine'], (result) => {
-            lastUsedLineIndex = result.lastUsedLine || 0;
+            chrome.storage.local.get(['lastUsedLine'], (result) => {
+                lastUsedLineIndex = result.lastUsedLine || 0;
+                resolve(); // Resolve the promise after loading
+            });
         });
     });
 };
 
 // Generates content, loading it first if necessary
-// Generates content, loading it first if necessary
-export const generateContent = (): string | null => {
+export const generateContent = async (): Promise<string | null> => {
     // Load content from storage, if it's empty
     if (postContentArray.length === 0) {
-        loadContentFromStorage();
+        await loadContentFromStorage();
         console.log('loadContentFromStorage()');
     }
 
@@ -37,13 +39,9 @@ export const generateContent = (): string | null => {
 
     const selectedContent = postContentArray[lastUsedLineIndex];
 
-    // console.log('postContentArray', postContentArray);
-    // console.log('selectedContent', selectedContent);
-
     // Update the index for the next generated line. If reached last line, set to first line again
     lastUsedLineIndex = (lastUsedLineIndex + 1) % postContentArray.length;
     chrome.storage.local.set({ lastUsedLine: lastUsedLineIndex });
-    //console.log('lastUsedLineIndex', lastUsedLineIndex);
 
     if (selectedContent) {
         return selectedContent;
