@@ -54,7 +54,7 @@ const TimeGap: React.FC = () => {
             </p>
             <div className="input-group-wrapper">
                 <div className="input-group">
-                    <label htmlFor="min-gap">Minimum Gap (in seconds)</label>
+                    <label htmlFor="min-gap">Minimum Gap</label>
                     <input
                         type="number"
                         id="min-gap"
@@ -64,9 +64,10 @@ const TimeGap: React.FC = () => {
                         onChange={handleMinChange}
                         placeholder="Enter minimum gap"
                     />
+                    <span>seconds</span>
                 </div>
                 <div className="input-group">
-                    <label htmlFor="max-gap">Maximum Gap (in seconds)</label>
+                    <label htmlFor="max-gap">Maximum Gap</label>
                     <input
                         type="number"
                         id="max-gap"
@@ -76,6 +77,7 @@ const TimeGap: React.FC = () => {
                         onChange={handleMaxChange}
                         placeholder="Enter maximum gap"
                     />
+                    <span>seconds</span>
                 </div>
             </div>
 

@@ -52,6 +52,14 @@ h3 {
   color: #aaa;
   margin-bottom: 4px;
 }
+.row:last-child{
+  text-align: center;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+
+
 
 /* content-to-post */
 .content-to-post textarea{
@@ -62,11 +70,56 @@ h3 {
   text-align: center;
 }
 
-.row:last-child{
-  text-align: center;
-  padding-top: 8px;
-  padding-bottom: 8px;
+/* General button styles */  
+.btn {  
+  display: inline-block;  
+  font-family: 'Arial', sans-serif;  
+  font-size: 16px;  
+  padding: 12px 24px;  
+  border-radius: 5px;  
+  color: #ffffff;  
+  background-color: #3498db; /* Button color */  
+  text-decoration: none;  
+  text-align: center;  
+  transition: background-color 0.3s ease, transform 0.2s ease;  
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  
+}  
+
+/* Hover effect for .btn */  
+.btn:hover {  
+  background-color: #2980b9; /* Darker shade on hover */  
+  transform: translateY(-2px); /* Slight lift effect on hover */  
+}  
+
+/* Specific styles for save button */  
+.btn-save {  
+  background-color: #27ae60; /* Save button color */  
+  border: 2px solid transparent; /* Default border */  
+}  
+
+/* Hover effect for .btn-save */  
+.btn-save:hover {  
+  background-color: #219653; /* Darker shade for save button */  
+  border: 2px solid #1e7e3e; /* Optional border on hover */  
+}  
+
+/* Additional styles for focus state */  
+.btn:focus,  
+.btn-save:focus {  
+  outline: none; /* Removes default outline */  
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5); /* Custom focus ring */  
+}  
+
+/* Active state for all buttons */  
+.btn:active,  
+.btn-save:active {  
+  transform: scale(0.95); /* Slightly shrink button on click */  
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Reduce shadow on click */  
 }
+
+
+
+
 
 /* Package Plans */
 .plan-name.active{
@@ -95,10 +148,6 @@ h3 {
   main {
     background-color: #1e1e1e;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-
-  .download-info .down-count {
-    color: #bb86fc;
   }
 
   .source-code a {

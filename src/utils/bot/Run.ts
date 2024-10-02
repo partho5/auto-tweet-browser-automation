@@ -1,94 +1,90 @@
-// Simulating the posting quota logic
 import {getTodayPostCount, loadBotState, resumeBotAfter, savePostCount} from "./BotStateManager";
-import {
-    clearDailyLimitMessage,
-    clearInputField,
-    dailyPostingQuotaExceeded,
-    duplicatePostContentDetected,
-    makePost
-} from "./TweeterInteract";
+import {dailyPostingQuotaExceeded, makePost} from "./TweeterInteract";
 import {setMsg} from "../ui/msgLog";
-import {generateRandomNum, randomMillis} from "../formatter/Numbers";
-import {clockTimeAfter, hourToMilliseconds, minuteToMilliseconds} from "../time/TimeUtils";
+import {randomMillis} from "../formatter/Numbers";
+import {clockTimeAfter} from "../time/TimeUtils";
 import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
-import {reloadCurrentTab} from "../../contentScript";
-import {sendMessageToContentScript} from "../../popup/Popup";
-
 
 let timeoutId: number | null = null;
 let postCount = 0; // in current session
 let todayPostCount = 0; // total of all time
 
 const MAX_POSTS_PER_SESSION = 300; // Maximum posts in a session
-const TARGET_POST_COUNT = 300; // How many tweet you want in one session
+const TARGET_POST_COUNT = 300; // How many tweets you want in one session
 const SESSION_GAP = 3; // 3-hour pause
 const DAILY_POSTING_QUOTA = 2400; // Total quota for the day
 
-// Function to start posting with random intervals
+let isBotActive = false; // Bot active flag
+
+// Start bot with posting logic
 const startBot = async (): Promise<void> => {
-    let result = await chrome.storage.local.get(['content', 'minGap', 'maxGap']);
-    let min = result.minGap || defaultPostingGapMin;
-    let max = result.maxGap || defaultPostingGapMax;
-    // In case user sets inconsistent values, we prevent malfunctioning by setting to default value
-    if(parseInt(min) >= parseInt(max)){
+    if (!isBotActive) {
+        isBotActive = true;
+        postCount = 0;
+        todayPostCount = await getTodayPostCount(); // Retrieve the current day's post count
+        console.log('Bot started.');
+
+        runBot(); // Initiate bot operation
+    }
+};
+
+// Core bot logic to handle posting and delays
+const runBot = async (): Promise<void> => {
+    const botState = await chrome.storage.local.get(['content', 'minGap', 'maxGap']);
+    let min = botState.minGap || defaultPostingGapMin;
+    let max = botState.maxGap || defaultPostingGapMax;
+
+    if (parseInt(min) >= parseInt(max)) {
         min = defaultPostingGapMin;
         max = defaultPostingGapMax;
     }
 
-    result = await chrome.storage.sync.get(['todayPostCount']);
-    todayPostCount = result.todayPostCount || 0;
-    todayPostCount = await getTodayPostCount();
-    console.log('todayPostCount', todayPostCount);
 
-    const randomDelay = randomMillis(min, max); // args in seconds
-    setTimeout(() => {
-        const readableTime = clockTimeAfter(randomDelay);
-        console.log(`Next post at ${readableTime}`);
-    }, 3000);
-
-    timeoutId = window.setTimeout(async () => {
-        if (!dailyPostingQuotaExceeded()) {
+    if (isBotActive && !dailyPostingQuotaExceeded()) {
+        const randomDelay = randomMillis(min, max); // Generate random delay for next post
+        timeoutId = window.setTimeout(async () => {
             const result = await makePost();
+
             if (result) {
                 ++postCount;
                 ++todayPostCount;
+                savePostCount(todayPostCount);
 
-                if(postCount <= MAX_POSTS_PER_SESSION){
-                    savePostCount(todayPostCount);
-                    const remaining = Math.max(0, MAX_POSTS_PER_SESSION-postCount);
-                    setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
-                    console.log(`post #${postCount} - delayed ${randomDelay} sec`);
-                }else{
+                const remaining = Math.max(0, MAX_POSTS_PER_SESSION - postCount);
+                setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
+                console.log(`Post #${postCount} - delayed ${randomDelay} sec`);
+
+                if (postCount < MAX_POSTS_PER_SESSION) {
+                    runBot(); // Schedule next post
+                } else {
                     stopBot();
-                    resumeBotAfter(SESSION_GAP * 60);
-
-                    sendMessageToContentScript('action', 'toggleBotState', (response)=>{
-                        console.log('popup toggleBotState', response);
-                    });
+                    resumeBotAfter(SESSION_GAP * 60); // Pause and resume after session gap
                 }
             }
-        }else{
-            setMsg('Posting quota exceeded 🙄\nYou may have to wait 3 hours');
-            console.log('Posting quota exceeded 🙄');
-            stopBot();
-
-            // After certain time period, start the bot again.
-            resumeBotAfter(MAX_POSTS_PER_SESSION * 60);
-        }
-
-        // Schedule the next post after a random delay
-        startBot(); // Recursive call to schedule the next post
-    }, randomDelay);
+        }, randomDelay);
+    } else {
+        setMsg('Posting quota exceeded 🙄\nYou may have to wait 3 hours');
+        console.log('Posting quota exceeded 🙄');
+        stopBot();
+        resumeBotAfter(SESSION_GAP * 60); // Resume after a certain time
+    }
 };
 
-// Function to stop the bot
+// Stop the bot and clear timeout
 const stopBot = (): void => {
     if (timeoutId !== null) {
         clearTimeout(timeoutId);
         timeoutId = null;
     }
-    //console.log('Bot stopped.');
-    setMsg('Bot 🤖 has been paused')
+    isBotActive = false;
+    setMsg('Bot 🤖 has been paused');
+    console.log('Bot stopped.');
 };
 
-export { startBot, stopBot };
+
+export const activateBot = () => {
+    isBotActive = true;
+}
+
+// Export functions for external control
+export {startBot, stopBot, runBot};

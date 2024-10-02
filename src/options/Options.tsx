@@ -86,7 +86,7 @@ export const Options: React.FC = () => {
     return (
         <main>
             <section className="content">
-                <h3>{appName}</h3>
+                <h3>{appName} Settings</h3>
 
                 <div className="row content-to-post">
                     <h4>Content to Post</h4>
@@ -100,7 +100,7 @@ export const Options: React.FC = () => {
                     ></textarea>
                     </div>
                     <div className="btn-container">
-                        <button onClick={saveContent} className="btn btn-save">Save Content</button>
+                        <button onClick={saveContent} className="btn btn-save" style={{backgroundColor: 'green'}}>Save Content</button>
                     </div>
                 </div>
 

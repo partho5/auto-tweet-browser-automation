@@ -25,9 +25,10 @@ label {
 }
 
 input {
-    width: 100%;
+    width: 200px;
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    margin-right: 10px;
 }

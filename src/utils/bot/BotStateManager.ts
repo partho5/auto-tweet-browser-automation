@@ -2,7 +2,8 @@ import {defaultPostingGapMax, defaultPostingGapMin} from "../../data/values";
 import {minuteToMilliseconds, todayFullDate} from "../time/TimeUtils";
 import {clearDailyLimitMessage, clearInputField} from "./TweeterInteract";
 import {setMsg} from "../ui/msgLog";
-import {startBot} from "./Run";
+import {activateBot, runBot, startBot} from "./Run";
+import {sendMessageToContentScript} from "../../popup/Popup";
 
 interface BotState {
     botState: boolean;
@@ -34,18 +35,15 @@ const loadBotState = (callback: (botState: BotState) => void): void => {
 * @param delay in minutes
 * */
 export const resumeBotAfter = (delay: number) => {
+    const delayMillis = minuteToMilliseconds(delay);
+    console.log('delayMillis ', delayMillis);
     setTimeout(()=>{
-        clearDailyLimitMessage();
-        clearInputField(); // in case previously populated content exists
-        startBot();
         setMsg('Bot started again');
-    }, minuteToMilliseconds(delay * 60)); // minute to sec
+        clearDailyLimitMessage();
+        startBot();
+    }, delayMillis);
 }
 
-export const savePostCount2 = (postCount: number) => {
-    // here used sync instead of local, so that multiple devices keep track of post count for a particular user.
-    chrome.storage.sync.set({'todayPostCount': postCount})
-}
 
 export const savePostCount = (postCount: number) => {
     const today = todayFullDate();
@@ -63,7 +61,7 @@ export const getTodayPostCount = async (): Promise<number> => {
     const today = todayFullDate();
 
     const { dailyPostCount = {} } = await chrome.storage.sync.get(['dailyPostCount']);
-    console.log('dailyPostCount', dailyPostCount);
+    //console.log('dailyPostCount', dailyPostCount);
     return dailyPostCount[today] || 0; // Return today's count or 0 if not found
 };
 
