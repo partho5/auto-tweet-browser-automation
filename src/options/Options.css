@@ -10,7 +10,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
@@ -50,7 +50,9 @@ h3 {
 }
 .row .hints{
   color: #aaa;
-  margin-bottom: 4px;
+  text-align: center;
+  margin-top: -20px;
+  margin-bottom: 20px;
 }
 .row:last-child{
   text-align: center;

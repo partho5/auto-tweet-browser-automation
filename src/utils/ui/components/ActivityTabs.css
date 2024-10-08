@@ -1,0 +1,36 @@
+/* Tabs.css */
+
+.tabs-container {
+    display: flex;
+    flex-direction: column; /* Arrange content in column */
+    width: 100%; /* Full width */
+}
+
+.tabs {
+    display: flex; /* Arrange tabs side by side */
+}
+
+.tab {
+    padding: 10px 20px; /* Padding for each tab */
+    cursor: pointer; /* Pointer cursor on hover */
+    font-weight: bold; /* Make the tab label bold */
+    transition: background-color 0.3s ease; /* Transition effect for background */
+}
+
+.tab:hover {
+    background-color: #f0f0f0; /* Light background on hover */
+}
+
+.tab.active {
+    color: blue; /* Active tab color */
+    border-bottom: 2px solid blue; /* Active tab bottom border */
+    background-color: rgba(238, 238, 255, 0.6); /* Active tab background color */
+}
+
+.tab-content {
+    padding: 20px; /* Padding for content area */
+    background-color: #f9f9f9; /* Content background color */
+    border: 1px solid #ccc; /* Border around content */
+    overflow: scroll;
+    max-height: 200px;
+}

@@ -4,6 +4,7 @@ import { appName } from "../data/values";
 import TimeGap from "../utils/ui/components/TimeGap";
 import {showPopupMessage} from "../utils/ui/components/notifications/showPopupMessage";
 import PackageChanger from "../utils/ui/components/PackageChanger";
+import ActivityTabs from "../utils/ui/components/ActivityTabs";
 
 // Define the types for saved content
 interface StoredContent {
@@ -100,7 +101,9 @@ export const Options: React.FC = () => {
                     ></textarea>
                     </div>
                     <div className="btn-container">
-                        <button onClick={saveContent} className="btn btn-save" style={{backgroundColor: 'green'}}>Save Content</button>
+                        <button onClick={saveContent} className="btn btn-save" style={{backgroundColor: 'green'}}>Save
+                            Content
+                        </button>
                     </div>
                 </div>
 
@@ -118,9 +121,17 @@ export const Options: React.FC = () => {
                             Active Plan : <span className="plan-name active">Free</span>
                         </div>
                         <div className="btn-container">
-                            <PackageChanger />
+                            <PackageChanger/>
                         </div>
                     </div>
+                </div>
+
+                <div className="row content-maker">
+                    <h4>Content Builder</h4>
+                    <div className="hints">
+                        Make content out of the box. Save hours
+                    </div>
+                    <ActivityTabs/>
                 </div>
 
                 {/*<div className="row">*/}
