@@ -81,7 +81,7 @@ const uniqueModifierCombinations = (arr: string[]): string[] => {
 }
 
 
-export const stockSymbolsContentWithLink1 = async (tickers: String[]): Promise<string> => {
+export const stockSymbolsContentWithLink = async (tickers: String[]): Promise<string> => {
     const uniqueChars = uniqueModifierCombinations(modifierChars);
     // console.log('uniqueChars', uniqueChars);
 
@@ -90,12 +90,19 @@ export const stockSymbolsContentWithLink1 = async (tickers: String[]): Promise<s
     for (let i=0; i < tickers.length; i++){
         contentArray.push(`$${tickers[i]} ${postSentence1}`)
     }
-    //console.log('contentArray', contentArray);
+    // console.log('contentArray', contentArray);
 
-    // $ticker + sentence + unique modifier + link
     let content = '';
-    for (let i = 0; i < uniqueChars.length; i++){
-        for (let j=0; j < contentArray.length; j++){
+
+    // First, generate combinations without appending any uniqueChars
+    for (let j = 0; j < contentArray.length; j++) {
+        content = `${content}${contentArray[j]} ${link1}\n`;
+    }
+
+    // Now, generate combinations with uniqueChars.
+    // $ticker + sentence + unique modifier + link
+    for (let i = 0; i < uniqueChars.length; i++) {
+        for (let j = 0; j < contentArray.length; j++) {
             content = `${content}${contentArray[j]}${uniqueChars[i]} ${link1}\n`;
         }
     }

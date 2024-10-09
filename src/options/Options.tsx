@@ -5,7 +5,7 @@ import TimeGap from "../utils/ui/components/TimeGap";
 import {showPopupMessage} from "../utils/ui/components/notifications/showPopupMessage";
 import PackageChanger from "../utils/ui/components/PackageChanger";
 import ActivityTabs from "../utils/ui/components/ActivityTabs";
-import {stockSymbolsContentWithLink1} from "../utils/data/PostContents";
+import {stockSymbolsContentWithLink} from "../utils/data/PostContents";
 
 // Define the types for saved content
 interface StoredContent {
@@ -93,8 +93,8 @@ export const Options: React.FC = () => {
                     .split(',')
                     .map((ticker: string) => ticker.trim()); // Trim any whitespace
                 if (Array.isArray(tickersArray) && tickersArray.length > 0) {
-                    const content = await stockSymbolsContentWithLink1(tickersArray); // Pass the array to the function
-                    console.log(content);
+                    const content = await stockSymbolsContentWithLink(tickersArray); // Pass the array to the function
+                    // console.log(content);
                     setPostContent(content)
                 } else {
                     console.error('No tickers fetched or tickers is not an array');
@@ -106,10 +106,6 @@ export const Options: React.FC = () => {
             console.error('Error while fetching symbols or generating content:', error);
         }
     };
-
-    const copyContent = () => {
-
-    }
 
 
     // @ts-ignore
@@ -163,7 +159,6 @@ export const Options: React.FC = () => {
                     </div>
                     <div className="btn-container">
                         <button onClick={forgeContent} className="btn btn-save" style={{backgroundColor: '#9C27B0'}}>🛠️ Make Content</button> &nbsp;
-                        <button onClick={copyContent} className="btn btn-save" style={{backgroundColor: '#000'}}>📜 Copy</button>
                     </div>
                 </div>
 
