@@ -33,14 +33,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if(result.content){
                     botRunning = !botRunning;
                     if(botRunning){
-                        startBot();
-                        setMsg('Bot 🤖 initializing ⚡...');
-                        setTimeout(() => {
-                            setMsg('⏳ Preparing contents...');
-                        }, 500);
-                        setTimeout(() => {
-                            setMsg('🤖 Scheduled 🕒 for posting...');
-                        }, 1000);
+                        setTimeout(()=>{
+                            startBot();
+                            setMsg('Bot 🤖 initializing ⚡...');
+                            setTimeout(() => {
+                                setMsg('⏳ Preparing contents...');
+                            }, 500);
+                            setTimeout(() => {
+                                setMsg('🤖 Scheduled 🕒 for posting...');
+                            }, 1000);
+                        }, 0*1000);
                     }else {
                         stopBot();
                     }

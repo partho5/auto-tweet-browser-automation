@@ -5,6 +5,7 @@ import TimeGap from "../utils/ui/components/TimeGap";
 import {showPopupMessage} from "../utils/ui/components/notifications/showPopupMessage";
 import PackageChanger from "../utils/ui/components/PackageChanger";
 import ActivityTabs from "../utils/ui/components/ActivityTabs";
+import {stockSymbolsContentWithLink1} from "../utils/data/PostContents";
 
 // Define the types for saved content
 interface StoredContent {
@@ -62,25 +63,53 @@ export const Options: React.FC = () => {
         retrieveContent();
     }, []);
 
-    const handleAPIcall = () => {
-        const apiUrl = `https://jovoc.com/api/...`;
+    const fetchStockSymbols = async () => {
+        const apiUrl = `https://apps.jovoc.com/fetch/monday`;
 
-        fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer YOUR_API_KEY',
-            },
-        })
-            .then((response) => {
-                return response.json();  // Convert response to JSON
-            })
-            .then((data) => {
-                console.log('isVerified=', data?.isVerified);  // Use the actual parsed data
-            })
-            .catch((error) => {
-                console.error('Error:', error);  // Handle errors if any
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();  // Convert response to JSON
+            return data?.tickers;  // Return the tickers
+        } catch (error) {
+            console.error('Error:', error);  // Handle errors if any
+            return null;  // Return null or handle error state accordingly
+        }
     };
+
+    const forgeContent = async () => {
+        try {
+            const tickersString = await fetchStockSymbols(); // Assuming it returns a string
+            // If tickersString is null, handle appropriately
+            if (tickersString) {
+                // Convert the comma-separated string to an array
+                const tickersArray = tickersString
+                    .split(',')
+                    .map((ticker: string) => ticker.trim()); // Trim any whitespace
+                if (Array.isArray(tickersArray) && tickersArray.length > 0) {
+                    const content = await stockSymbolsContentWithLink1(tickersArray); // Pass the array to the function
+                    console.log(content);
+                    setPostContent(content)
+                } else {
+                    console.error('No tickers fetched or tickers is not an array');
+                }
+            } else {
+                console.error('Failed to fetch tickers or tickers is null');
+            }
+        } catch (error) {
+            console.error('Error while fetching symbols or generating content:', error);
+        }
+    };
+
+    const copyContent = () => {
+
+    }
 
 
     // @ts-ignore
@@ -95,15 +124,13 @@ export const Options: React.FC = () => {
                         Write post content, each in a separate line
                     </div>
                     <div className="">
-                    <textarea
-                        value={postContent}
-                        onChange={handlePostContentChange}
-                    ></textarea>
+                        <textarea
+                            value={postContent}
+                            onChange={handlePostContentChange}
+                        ></textarea>
                     </div>
                     <div className="btn-container">
-                        <button onClick={saveContent} className="btn btn-save" style={{backgroundColor: 'green'}}>Save
-                            Content
-                        </button>
+                        <button onClick={saveContent} className="btn btn-save" style={{backgroundColor: 'green'}}>💾 Save Content</button>
                     </div>
                 </div>
 
@@ -131,7 +158,13 @@ export const Options: React.FC = () => {
                     <div className="hints">
                         Make content out of the box. Save hours
                     </div>
-                    <ActivityTabs/>
+                    <div className="tabs-container">
+                        <ActivityTabs/>
+                    </div>
+                    <div className="btn-container">
+                        <button onClick={forgeContent} className="btn btn-save" style={{backgroundColor: '#9C27B0'}}>🛠️ Make Content</button> &nbsp;
+                        <button onClick={copyContent} className="btn btn-save" style={{backgroundColor: '#000'}}>📜 Copy</button>
+                    </div>
                 </div>
 
                 {/*<div className="row">*/}
@@ -140,8 +173,8 @@ export const Options: React.FC = () => {
 
                 <div className="row links">
                     <p className="developer">
-                        Developed by: <a href="https://www.linkedin.com/in/partho5" target="_blank" rel="noreferrer">Partho
-                        Protim</a>
+                        Developed by:
+                        <a href="https://www.linkedin.com/in/partho5" target="_blank" rel="noreferrer">Partho Protim</a>
                     </p>
                 </div>
             </section>

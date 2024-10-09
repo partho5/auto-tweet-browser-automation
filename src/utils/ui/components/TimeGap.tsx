@@ -10,26 +10,33 @@ const TimeGap: React.FC = () => {
     // Retrieve saved values from Chrome extension local storage
     useEffect(() => {
         chrome.storage.local.get(['minGap', 'maxGap'], (result) => {
-            if (result.minGap !== undefined && result.maxGap !== undefined && result.minGap !== '' && result.maxGap !== '') {
-                console.log("minGap maxGap has value", result);
-                setMinGap(result.minGap);
-                setMaxGap(result.maxGap);
+            if (result.minGap == undefined || result.maxGap == undefined || result.minGap == '' || result.maxGap == '') {
+                //console.log("minGap or maxGap not set", result.minGap, result.maxGap);
+
+                // set default values to storage
+                chrome.storage.local.set({ minGap: String(defaultPostingGapMin) });
+                chrome.storage.local.set({ maxGap: String(defaultPostingGapMax) });
             } else {
-                console.log("minGap or maxGap not set", result.minGap, result.maxGap);
-                // Default values are already set in state initialization
+                //console.log("minGap maxGap has value", result);
             }
+
+            setMinGap(result.minGap);
+            setMaxGap(result.maxGap);
         });
     }, []);
 
 
-    // min value must be < max value
+    // Showing message based on whether min < max
     useEffect(() => {
-        if (minGap === '' || maxGap === '' || parseInt(minGap) >= parseInt(maxGap)) {
-            //console.log('min < max -false')
-            showPopupMessage('<u>Posting Time Gap</u>: Maximum value must be greater than minimum value.', 'error');
-        } else {
-            hidePopupMsg('error')
-            //console.log('min < max -OK')
+        if (minGap !== undefined && maxGap !== undefined && minGap !== '' && maxGap !== '') {
+            // both have value, then compare
+            if( parseInt(minGap) >= parseInt(maxGap) ){
+                showPopupMessage('<u>Posting Time Gap</u>: Maximum value must be greater than minimum value.', 'error');
+                //console.log('min < max -false')
+            }else{
+                hidePopupMsg('error')
+                //console.log('min < max -OK', minGap, maxGap)
+            }
         }
     }, [minGap, maxGap]);
 

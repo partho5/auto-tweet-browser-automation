@@ -38,6 +38,6 @@ export default defineManifest({
       'storage',
   ],
   host_permissions: [
-    "*://jovoc.com/*"
+    "*://*.jovoc.com/*"
   ],
 })

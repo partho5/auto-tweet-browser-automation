@@ -9,9 +9,7 @@ interface Tab {
 
 // Sample data for tabs
 let tabData: Tab[] = [
-    { label: 'Trading Content', content: 'This is content related to Trading.' },
-    { label: 'Health Content', content: 'This is content related to Health.' },
-    { label: 'Finance Content', content: 'This is content related to Finance.' },
+    { label: 'Trading Content', content: 'Content pattern will be shown here' },
 ];
 
 // Tab component
@@ -32,16 +30,7 @@ const Tabs: React.FC = () => {
     };
 
     const renderContent = () => {
-        return (
-            <>
-                {Array.from({ length: 100 }, (_, i) => (
-                    <div key={i}>
-                        {`${tabData[activeTabIndex].content} ${i}`} {/* Your desired content */}
-                        <br />
-                    </div>
-                ))}
-            </>
-        );
+        return `${tabData[activeTabIndex].content}`;
     };
 
     return (
@@ -56,7 +45,7 @@ const Tabs: React.FC = () => {
                     />
                 ))}
             </div>
-            <div className="tab-content">
+            <div className="tab-content" id="tab-content">
                 {renderContent()}
             </div>
         </div>

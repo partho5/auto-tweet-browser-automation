@@ -51,34 +51,6 @@ export const generateContent = async (): Promise<string | null> => {
 
 
 const modifierChars = uniqueModifierChars;
-// Take 1 to 3 chars from those
-export const uniqueModifier = (): string[] => {
-    const result: string[] = [];
-
-    // Helper function to generate combinations
-    const generateCombinations = (currentCombo: string, start: number) => {
-        if (currentCombo.length > 0) {
-            result.push(currentCombo);
-        }
-
-        // Generate combinations up to 3 modifiers
-        if (currentCombo.length >= 3) {
-            return;
-        }
-
-        for (let i = start; i < modifierChars.length; i++) {
-            generateCombinations(currentCombo + modifierChars[i], i + 1);
-        }
-    };
-
-    // Generate all combinations starting with each modifier
-    for (let i = 0; i < modifierChars.length; i++) {
-        generateCombinations(modifierChars[i], i + 1);
-    }
-
-    return result;
-};
-
 
 /*=========================================*/
 const uniqueModifierCombinations = (arr: string[]): string[] => {
@@ -109,9 +81,9 @@ const uniqueModifierCombinations = (arr: string[]): string[] => {
 }
 
 
-export const contentLines = (): string => {
+export const stockSymbolsContentWithLink1 = async (tickers: String[]): Promise<string> => {
     const uniqueChars = uniqueModifierCombinations(modifierChars);
-    //console.log('uniqueChars', uniqueChars);
+    // console.log('uniqueChars', uniqueChars);
 
     // $ticker + sentence
     let contentArray = [];
