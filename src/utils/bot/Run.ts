@@ -52,7 +52,7 @@ const runBot = async (): Promise<void> => {
 
                 const remaining = Math.max(0, MAX_POSTS_PER_SESSION - postCount);
                 setMsg(`🐤 Tweets Posted: ${postCount}\n🤖 will pause after ${remaining} posts`);
-                console.log(`Post #${postCount} - delayed ${randomDelay} sec`);
+                // console.log(`Post #${postCount} - delayed ${randomDelay} millis`);
 
                 if (postCount < MAX_POSTS_PER_SESSION) {
                     runBot(); // Schedule next post

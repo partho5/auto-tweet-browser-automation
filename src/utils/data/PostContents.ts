@@ -95,6 +95,7 @@ export const stockSymbolsContentWithLink = async (tickers: String[]): Promise<st
     let content = '';
 
     // First, generate combinations without appending any uniqueChars
+    // $ticker + sentence + link
     for (let j = 0; j < contentArray.length; j++) {
         content = `${content}${contentArray[j]} ${link1}\n`;
     }

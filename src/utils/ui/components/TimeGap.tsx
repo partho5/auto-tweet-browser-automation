@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './TimeGap.css'
 import {hidePopupMsg, showPopupMessage} from "./notifications/showPopupMessage";
 import {defaultPostingGapMax, defaultPostingGapMin} from "../../../data/values";
+import StartBotDelay from "./StartBotDelay";
 
 const TimeGap: React.FC = () => {
     const [minGap, setMinGap] = useState<string>(String(defaultPostingGapMin));
@@ -86,6 +87,10 @@ const TimeGap: React.FC = () => {
                     />
                     <span>seconds</span>
                 </div>
+            </div>
+
+            <div style={{marginTop: '40px'}}>
+                <StartBotDelay />
             </div>
 
         </div>

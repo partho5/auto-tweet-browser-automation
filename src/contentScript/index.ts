@@ -20,6 +20,9 @@ injectUI();
 
 let botRunning = false;
 
+// If not enabled, value will be set to 0, thus no delay will be applied.
+let botStartDelay = 0; // in minutes.
+
 // Listener in the content script to receive messages from the extension
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.TYPE === 'action') {
@@ -29,10 +32,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
         }
         else if (request.MESSAGE === 'toggleBotState') {
-            chrome.storage.local.get(['content'], (result) => {
+            chrome.storage.local.get(['content', 'isBotStartDelayEnabled', 'botStartDelay'], (result) => {
                 if(result.content){
                     botRunning = !botRunning;
                     if(botRunning){
+                        if(result.isBotStartDelayEnabled){
+                            botStartDelay = result.botStartDelay;
+                        }
+
                         setTimeout(()=>{
                             startBot();
                             setMsg('Bot 🤖 initializing ⚡...');
@@ -42,7 +49,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             setTimeout(() => {
                                 setMsg('🤖 Scheduled 🕒 for posting...');
                             }, 1000);
-                        }, 0*1000);
+                        }, botStartDelay*60*1000); // minute to millis
                     }else {
                         stopBot();
                     }
