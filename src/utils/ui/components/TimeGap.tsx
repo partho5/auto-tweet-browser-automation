@@ -89,8 +89,12 @@ const TimeGap: React.FC = () => {
                 </div>
             </div>
 
-            <div style={{marginTop: '40px'}}>
-                <StartBotDelay />
+            <div style={{marginTop: '60px'}}>
+                <p className="hints">
+                    After clicking Start button, bot will start working after a delay. (Applies after next restart of bot)
+                </p>
+
+                <StartBotDelay/>
             </div>
 
         </div>

@@ -143,6 +143,22 @@ h3 {
 }
 
 
+.starting-line{
+  display: flex;
+}
+.starting-line .btn-container{
+  margin-top: 0;
+}
+#reset-content-starting-line{
+  margin-left: 1rem;
+  padding: 1px 2px;
+  background-color: #f00;
+  color: #fff;
+  cursor: pointer;
+}
+#reset-content-starting-line:hover{
+  background-color: #d50000;
+}
 
 /*
 ---------------------------------------------

@@ -52,7 +52,6 @@ const StartBotDelay: React.FC = () => {
                 />
                 <span>minutes</span>
             </span>
-            &nbsp;<span className="hints">(Applies after next restart of bot)</span>
         </div>
     );
 };

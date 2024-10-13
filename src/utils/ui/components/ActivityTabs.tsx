@@ -9,7 +9,7 @@ interface Tab {
 
 // Sample data for tabs
 let tabData: Tab[] = [
-    { label: 'Trading Content', content: 'Content pattern will be shown here' },
+    { label: 'Trading Content', content: 'Content pattern: $<STOCK_SYMBOL> <CONTENT> <CTA_LINK>' },
 ];
 
 // Tab component

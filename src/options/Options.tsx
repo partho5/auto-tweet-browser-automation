@@ -108,6 +108,22 @@ export const Options: React.FC = () => {
     };
 
 
+    const handleStartingLineReset = () => {
+        // Ask for user consent
+        const userConsents = confirm('Do you want to reset the starting line to the first line?');
+
+        if (userConsents) {
+            // Set the lastUsedLine to 0 if the user consents
+            chrome.storage.local.set({ lastUsedLine: 0 }, () => {
+                // Display success message upon successful storage
+                showPopupMessage('From now on, the bot will start posting from the first line', 'success');
+            });
+        } else {
+            // Optionally, you can show a message indicating that the action was canceled
+            showPopupMessage('Starting line reset canceled', 'error');
+        }
+    }
+
     // @ts-ignore
     return (
         <main>
@@ -159,6 +175,17 @@ export const Options: React.FC = () => {
                     </div>
                     <div className="btn-container">
                         <button onClick={forgeContent} className="btn btn-save" style={{backgroundColor: '#9C27B0'}}>🛠️ Make Content</button> &nbsp;
+                    </div>
+
+                    <div className='starting-line'>
+                        ⟳ Reset Content Starting Line ?
+                        <div className='btn-container'>
+                            <button
+                                id="reset-content-starting-line"
+                                onClick={handleStartingLineReset}
+                                title="Bot will start posting from the first line of contents. Are You Sure ?"
+                            >RESET</button>
+                        </div>
                     </div>
                 </div>
 

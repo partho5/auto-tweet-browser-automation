@@ -1,6 +1,7 @@
 import {startBot, stopBot} from "../utils/bot/Run";
 import {displayMsgId} from "../data/values";
 import {setMsg} from "../utils/ui/msgLog";
+import {minuteToMilliseconds} from "../utils/time/TimeUtils";
 
 
 const injectUI = () => {
@@ -27,7 +28,7 @@ let botStartDelay = 0; // in minutes.
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.TYPE === 'action') {
         if (request.MESSAGE === 'getBotState') {
-            console.log('content script getBotState', request.MESSAGE);
+            // console.log('content script getBotState', request.MESSAGE);
             sendResponse({ botRunning });
             return true;
         }
@@ -36,10 +37,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if(result.content){
                     botRunning = !botRunning;
                     if(botRunning){
-                        if(result.isBotStartDelayEnabled){
-                            botStartDelay = result.botStartDelay;
+                        if(result.isBotStartDelayEnabled !== undefined && result.botStartDelay !== undefined){
+                            if(result.isBotStartDelayEnabled > 1){
+                                console.log(`Bot will start after ${result.botStartDelay} minutes`);
+                                botStartDelay = minuteToMilliseconds(result.botStartDelay);
+                            }
                         }
 
+                        // if delay disabled, botStartDelay will be 0, so setTimeout will have no effect. So bot will start immediately.
                         setTimeout(()=>{
                             startBot();
                             setMsg('Bot 🤖 initializing ⚡...');
@@ -49,7 +54,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                             setTimeout(() => {
                                 setMsg('🤖 Scheduled 🕒 for posting...');
                             }, 1000);
-                        }, botStartDelay*60*1000); // minute to millis
+                        }, botStartDelay);
                     }else {
                         stopBot();
                     }
